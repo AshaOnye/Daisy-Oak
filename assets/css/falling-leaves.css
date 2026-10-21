@@ -1,0 +1,85 @@
+/* =========================================================
+   Falling Leaves Effect  (standalone – all selectors are
+   prefixed with "fl-" so they cannot clash with the theme)
+   ========================================================= */
+
+#fl-leaves-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;   /* never blocks clicks/hover on the page */
+  z-index: 9990;
+  direction: ltr;
+}
+
+.fl-leaf {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: var(--fl-size, 24px);
+  height: var(--fl-size, 24px);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation-name: fl-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: var(--fl-fall-duration, 12s);
+  animation-delay: var(--fl-delay, 0s);
+}
+
+.fl-leaf__inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  animation-name: fl-sway;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-duration: var(--fl-sway-duration, 4s);
+  animation-delay: var(--fl-delay, 0s);
+}
+
+.fl-leaf__inner svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation-name: fl-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: var(--fl-spin-duration, 8s);
+  animation-delay: var(--fl-delay, 0s);
+  animation-direction: var(--fl-spin-direction, normal);
+}
+
+/* Vertical fall + fade in/out at the edges of the viewport */
+@keyframes fl-fall {
+  0%   { transform: translate3d(var(--fl-x-start, 0vw), -8vh, 0); opacity: 0; }
+  8%   { opacity: var(--fl-opacity, 0.9); }
+  92%  { opacity: var(--fl-opacity, 0.9); }
+  100% { transform: translate3d(var(--fl-x-end, 0vw), 108vh, 0); opacity: 0; }
+}
+
+/* Gentle left/right drifting */
+@keyframes fl-sway {
+  0%   { transform: translateX(calc(var(--fl-sway-distance, 40px) * -1)) rotate(-12deg); }
+  100% { transform: translateX(var(--fl-sway-distance, 40px)) rotate(12deg); }
+}
+
+/* Slow tumbling of the leaf itself */
+@keyframes fl-spin {
+  0%   { transform: rotate(0deg)   rotateY(0deg); }
+  100% { transform: rotate(360deg) rotateY(360deg); }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #fl-leaves-container {
+    display: none;
+  }
+}
